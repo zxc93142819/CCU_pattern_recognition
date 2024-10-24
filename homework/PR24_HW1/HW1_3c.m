@@ -12,19 +12,19 @@ data = {[-5.01, -5.43, 1.08, 0.86, -2.67, 4.94, -2.51, -2.25, 5.56, 1.03], ...
         [2.26 , 3.22 , -5.31 , 3.42 , 2.39 , 4.33 , 3.97 , 0.27 , -0.43 , -0.36], ...
         [8.13 , -2.66 , -9.87 , 5.19 , 9.21 , -0.98 , 6.65 , 2.41 , -8.71 , 6.43]};
 
-w1_mu = [0 0] ;
-w2_mu = [0 0] ;
-w3_mu = [0 0] ;
-w1_co = [0 0;0 0] ;
-w2_co = [0 0;0 0] ;
-w3_co = [0 0;0 0] ;
+w1_mu = [0 0 0] ;
+w2_mu = [0 0 0] ;
+w3_mu = [0 0 0] ;
+w1_co = [0 0 0;0 0 0;0 0 0] ;
+w2_co = [0 0 0;0 0 0;0 0 0] ;
+w3_co = [0 0 0;0 0 0;0 0 0] ;
 
 prior = [0.2 , 0.3 , 0.5] ;
 wrong = [0 , 0 , 0] ;
 % 計算平均值和共變異數
 for i = 1:3
-    m = zeros(1, 2); % 儲存平均值
-    c = zeros(2, 2); % 儲存共變異數矩陣
+    m = zeros(1, 3); % 儲存平均值
+    c = zeros(3, 3); % 儲存共變異數矩陣
 
     % 計算每組的平均值
     for j = 1:3
@@ -34,11 +34,20 @@ for i = 1:3
     % 計算共變異數矩陣
     for j = 1:3
         for k = 1:3
-            % 使用母體變異數(除數為n，非n-1)
-            ccc = cov(data{(i - 1) * 3 + j}, data{(i - 1) * 3 + k}) * 9 / 10 ;
-            c(j , k) = ccc(1 , 2) ;
+            t = 0 ;
+            for ii = 1:10
+                t = t + (data{(i - 1) * 3 + j}(ii) - m(j)) * (data{(i - 1) * 3 + k}(ii) - m(j)) ;    
+            end
+            c(j,k) = t / 10 ;
         end
     end
+
+    % 輸出平均值和共變異數矩陣
+    disp('Mean:');
+    disp(m);
+    disp('Covariance:');
+    disp(c);
+    disp(' ');
 
     if(i == 1)
         w1_mu = m ;
@@ -56,32 +65,6 @@ end
 
 % 計算wrong sample
 for i = 1:10
-    % check this is the max value of ω1、ω2、ω3
-    % a = mvnpdf([data{1}(i) data{2}(i)] , w1_mu , w1_co) * prior(1) ;
-    % b = mvnpdf([data{1}(i) data{2}(i)] , w2_mu , w2_co) * prior(2) ;
-    % c = mvnpdf([data{1}(i) data{2}(i)] , w3_mu , w3_co) * prior(3) ;
-    % disp(mvnpdf([data{1}(i) data{2}(i)] , w1_mu , w1_co))
-    % if(a<b)||(a<c)
-    %     wrong(1) = wrong(1) + 1;
-    % end
-    % 
-    % a = mvnpdf([data{4}(i) data{5}(i)] , w1_mu , w1_co) * prior(1) ;
-    % b = mvnpdf([data{4}(i) data{5}(i)] , w2_mu , w2_co) * prior(2) ;
-    % c = mvnpdf([data{4}(i) data{5}(i)] , w3_mu , w3_co) * prior(3) ;
-    % % disp([data{4}(i) data{5}(i)])
-    % if(a>b)||(b<c)
-    %     wrong(2) = wrong(2) + 1;
-    % end
-    % 
-    % a = mvnpdf([data{7}(i) data{8}(i)] , w1_mu , w1_co) * prior(1) ;
-    % b = mvnpdf([data{7}(i) data{8}(i)] , w2_mu , w2_co) * prior(2) ;
-    % c = mvnpdf([data{7}(i) data{8}(i)] , w3_mu , w3_co) * prior(3) ;
-    % % disp([data{7}(i) data{8}(i)])
-    % if(a>c)||(b>c)
-    %     wrong(3) = wrong(3) + 1;
-    % end
-
-
     for w = 1:3
         predict = [] ;
         X = [data{(w - 1) * 3 + 1}(i) data{(w - 1) * 3 + 2}(i) data{(w - 1) * 3 + 3}(i)] ;

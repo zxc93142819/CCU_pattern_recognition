@@ -46,18 +46,12 @@ for i = 1:length(y_sorted)
     TPR_history(end+1) = TPR;
 end
 
-% 計算 AUC
-AUC = abs(trapz(FPR_history, TPR_history));
-
 % 繪製 ROC 曲線
 figure;
 plot(FPR_history, TPR_history, '-o', 'LineWidth', 2, 'MarkerSize', 6);
 xlabel('False Positive Rate (FPR)', 'FontSize', 12);
 ylabel('True Positive Rate (TPR)', 'FontSize', 12);
 title('ROC Curve', 'FontSize', 14);
-
-% 顯示 AUC 值
-fprintf('AUC: %.2f\n', AUC);
 
 % 顯示網格
 grid on;

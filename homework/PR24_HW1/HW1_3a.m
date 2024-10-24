@@ -23,9 +23,11 @@ for i = 1:3
     % 計算共變異數矩陣
     for j = 1:2
         for k = 1:2
-            % 使用母體變異數(除數為n，非n-1)
-            ccc = cov(data{(i-1) * 2 + j}, data{(i-1) * 2 + k}) * 9 / 10 ;
-            c(j , k) = ccc(1 , 2) ;
+            t = 0 ;
+            for ii = 1:10
+                t = t + (data{(i - 1) * 2 + j}(ii) - m(j)) * (data{(i - 1) * 2 + k}(ii) - m(j)) ;    
+            end
+            c(j,k) = t / 10 ;
         end
     end
 

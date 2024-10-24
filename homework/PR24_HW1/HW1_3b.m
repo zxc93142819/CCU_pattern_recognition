@@ -56,32 +56,6 @@ end
 
 % 計算wrong sample
 for i = 1:10
-    % check this is the max value of ω1、ω2、ω3
-    % a = mvnpdf([data{1}(i) data{2}(i)] , w1_mu , w1_co) * prior(1) ;
-    % b = mvnpdf([data{1}(i) data{2}(i)] , w2_mu , w2_co) * prior(2) ;
-    % c = mvnpdf([data{1}(i) data{2}(i)] , w3_mu , w3_co) * prior(3) ;
-    % disp(mvnpdf([data{1}(i) data{2}(i)] , w1_mu , w1_co))
-    % if(a<b)||(a<c)
-    %     wrong(1) = wrong(1) + 1;
-    % end
-    % 
-    % a = mvnpdf([data{4}(i) data{5}(i)] , w1_mu , w1_co) * prior(1) ;
-    % b = mvnpdf([data{4}(i) data{5}(i)] , w2_mu , w2_co) * prior(2) ;
-    % c = mvnpdf([data{4}(i) data{5}(i)] , w3_mu , w3_co) * prior(3) ;
-    % % disp([data{4}(i) data{5}(i)])
-    % if(a>b)||(b<c)
-    %     wrong(2) = wrong(2) + 1;
-    % end
-    % 
-    % a = mvnpdf([data{7}(i) data{8}(i)] , w1_mu , w1_co) * prior(1) ;
-    % b = mvnpdf([data{7}(i) data{8}(i)] , w2_mu , w2_co) * prior(2) ;
-    % c = mvnpdf([data{7}(i) data{8}(i)] , w3_mu , w3_co) * prior(3) ;
-    % % disp([data{7}(i) data{8}(i)])
-    % if(a>c)||(b>c)
-    %     wrong(3) = wrong(3) + 1;
-    % end
-
-
     for w = 1:3
         predict = [] ;
         X = [data{(w - 1) * 3 + 1}(i) data{(w - 1) * 3 + 2}(i)] ;
