@@ -1,7 +1,7 @@
 clear
 clc
 
-S = load("roc_data.mat") ;
+S = load("roc_data_new.mat") ;
 [x,y] = deal(S.x , S.y) ;
 
 % 對 x 向量進行排序，並獲得排序的索引
