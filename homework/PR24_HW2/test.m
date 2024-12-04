@@ -1,5 +1,5 @@
-clear;
 clc;
+clear;
 
 % (Three samples, Features data, Three categories)
 w = zeros(3,10,3);
@@ -18,25 +18,39 @@ w(:,:,3) = [
     1.6 1.6 -0.41 -0.45 0.35 -0.48 -0.079 -0.22 1.2 -0.11;
     -0.014 0.48 0.32 1.4 3.1 0.11 0.14 2.2 -0.46 -0.49];
 
-m = zeros(3,1);
+% means
+m = zeros(3,1,3);
 for j = 1:3
     for i = 1:10
-        m = m + w(:,i,j);
+        m(:,1,j) = m(:,1,j) + w(:,i,j);
     end
 end
-m = m/30;
+m = m/10;
+m_total = zeros(3,1);
+for i = 1:3
+    m_total = m_total+10*m(:,1,i);
+end
+m_total = m_total/30;
 
-S = zeros(3,3);
+S = zeros(3,3,3);
 for j = 1:3
     for i = 1:10
-    tmp = w(:,i,j) - m;
-    S = S + tmp*tmp';
+    tmp = w(:,i,j) - m(:,1,j);
+    S(:,:,j) = S(:,:,j) + tmp*tmp';
     end
 end
-disp("(a) scatter matrix S = ");disp(S);
+SW = S(:,:,1) + S(:,:,2) + S(:,:,3);
 
-ori_C = eig(S);
-sort_C = sort(eig(S),1,'descend');
+SB = zeros(3,3);
+for i = 1:3
+    tmp = m(:,1,i) - m_total;
+    SB = SB + 10*(tmp*tmp');
+end
+disp("(a) within-class scatter matrix SW = ");disp(SW);
+disp("    between-class scatter matrix SB = ");disp(SB);
+
+ori_C = eig((SW^(-1))*SB);
+sort_C = sort(eig((SW^(-1))*SB),1,'descend');
 index_1 = 0; % 最大eignevalue的索引
 index_2 = 0; % 次大eignevalue的索引
 for i = 1:3
@@ -48,20 +62,19 @@ for i = 1:3
     end
 end
 
-[A, B] = eig(S);% eigenvector eigenvalue
+[A, B] = eig(SW^(-1)*SB);% eigenvector eigenvalue
 eigenvector = zeros(3,1,2);
 eigenvector(:,:,1) = [A(1,index_1);A(2,index_1);A(3,index_1)];% 最大eignevalue 對應的eigenvector
 eigenvector(:,:,2) = [A(1,index_2);A(2,index_2);A(3,index_2)];% 次大eignevalue 對應的eigenvector
 fprintf("(b) Two largest eigenvalues = %.4f and %.4f\n", sort_C(1), sort_C(2));
 fprintf("    Two largest eigenvectors = [%.4f; %.4f; %.4f] and [%.4f; %.4f; %.4f]\n",eigenvector(:,:,1),eigenvector(:,:,2));
 
-
 % ak=et(xk-m)
 a = zeros(2,10,3);
 for k = 1:3
     for j = 1:10
         for i = 1:2
-            a(i,j,k) = eigenvector(:,:,i)'*(w(:,j,k)-m);
+            a(i,j,k) = eigenvector(:,:,i)'*(w(:,j,k)-m_total);
         end
     end
 end
