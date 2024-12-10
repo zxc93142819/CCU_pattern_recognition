@@ -14,56 +14,26 @@ data_w3 = [
     1.6 1.6 -0.41 -0.45 0.35 -0.48 -0.079 -0.22 1.2 -0.11;
     -0.014 0.48 0.32 1.4 3.1 0.11 0.14 2.2 -0.46 -0.49];
 
-data = zeros(3 , 10 , 3) ;
-data(:,:,1) = data_w1 ;
-data(:,:,2) = data_w2 ;
-data(:,:,3) = data_w3 ;
+data = [data_w1 data_w2 data_w3] ;
 
 % (a)
-% x , mean , w
-mean_vec = zeros(3 , 1 , 3) ;
-for x = 1:3
-    for w = 1:3
-        mean_vec(x,:,w) = mean(data(x,:,w)) ;
-    end
+mean_vec = zeros(3 , 1) ;
+for i = 1:3
+    mean_vec(i) = mean(data(i,:)) ;
 end
 
 % disp(mean_vec)
 
-% x , mean , w
-S = zeros(3 , 3 , 3) ;
-Sw = zeros(3 , 3 , 3) ;
-for w = 1:3
-    for j = 1:10
-        dif = data(:,j,w) - mean_vec(:,1,w) ;
-        S(:,:,w) = S(:,:,w) + dif * dif' ;
-    end
+S = zeros(3 , 3) ;
+for j = 1:30
+    dif = data(:,j) - mean_vec(:) ;
+    S = S + dif * dif' ;
 end
-% Sw = S1 + S2 + S3
-Sw = S(:,:,1) + S(:,:,2) + S(:,:,3) ;
-% SB = (ci - overall_mean)(ci - overall_meean)'
-overall_mean = zeros(3 , 1) ;
-for x = 1:3
-    overall_mean(x,1) = mean(data(x,:)) ;
-end
-SB = zeros(3 , 3) ;
-
-
-disp('(a)')
-disp('Scatter Matrix:') ;
-disp(S) ;
 
 % (b)
 [eigenvectors, eigenvalues] = eig(S);
 [eigenvalues_sorted, idx] = sort(diag(eigenvalues), 'descend');
 principal_eigenvectors = eigenvectors(:, idx(1:2)); % Top 2 eigenvectors
-
-disp("")
-disp('(b)')
-disp('Eigenvalues:');
-disp(eigenvalues_sorted(1:2));
-disp('Corresponding Eigenvectors:');
-disp(principal_eigenvectors);
 
 % (c)
 % ak = e'(xk - m)
@@ -85,8 +55,3 @@ scatter(a(1,21:30), a(2,21:30), 'b', 'filled');
 hold on ;
 title('Projected Data onto 2D Subspace');
 legend({'ω1', 'ω2', 'ω3'});
-
-% (d)
-disp("")
-disp('(d)')
-predict(a)

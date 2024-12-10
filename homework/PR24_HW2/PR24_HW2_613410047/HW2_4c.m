@@ -47,46 +47,36 @@ for x = 1:3
     overall_mean(x,1) = mean(data(x,:)) ;
 end
 SB = zeros(3 , 3) ;
-
-
-disp('(a)')
-disp('Scatter Matrix:') ;
-disp(S) ;
+for w = 1:3
+    dif = mean_vec(:,1,w) - overall_mean ;
+    SB = SB + 10 * dif * dif' ;
+end
 
 % (b)
-[eigenvectors, eigenvalues] = eig(S);
+% Sw^(-1) * SB
+[eigenvectors, eigenvalues] = eig(Sw^(-1) * SB);
 [eigenvalues_sorted, idx] = sort(diag(eigenvalues), 'descend');
 principal_eigenvectors = eigenvectors(:, idx(1:2)); % Top 2 eigenvectors
 
-disp("")
-disp('(b)')
-disp('Eigenvalues:');
-disp(eigenvalues_sorted(1:2));
-disp('Corresponding Eigenvectors:');
-disp(principal_eigenvectors);
-
 % (c)
 % ak = e'(xk - m)
-a = zeros(2 , 30) ;
+a = zeros(2 , 10 , 3) ;
 for e = 1:2
     eigenvector = principal_eigenvectors(:,e) ;
-    for i = 1:30
-        a(e,i) = eigenvector' * (data(:,i) - mean_vec);
+    for i = 1:10
+        for w = 1:3
+            a(e,i,w) = eigenvector' * (data(:,i,w) - overall_mean);
+        end
     end
 end
 
 % Plot projected data
 figure;
-scatter(a(1,1:10), a(2,1:10), 'r', 'filled'); 
+scatter(a(1,:,1), a(2,:,1), 'r', 'filled'); 
 hold on ;
-scatter(a(1,11:20), a(2,11:20), 'g', 'filled');
+scatter(a(1,:,2), a(2,:,2), 'g', 'filled');
 hold on ;
-scatter(a(1,21:30), a(2,21:30), 'b', 'filled');
+scatter(a(1,:,3), a(2,:,3), 'b', 'filled');
 hold on ;
 title('Projected Data onto 2D Subspace');
 legend({'ω1', 'ω2', 'ω3'});
-
-% (d)
-disp("")
-disp('(d)')
-predict(a)

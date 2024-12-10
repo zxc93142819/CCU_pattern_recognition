@@ -52,24 +52,11 @@ for w = 1:3
     SB = SB + 10 * dif * dif' ;
 end
 
-disp('(a)')
-disp('within-class scatter matrix SW:')
-disp(Sw)
-disp('between-class scatter matrix SB:') ;
-disp(SB) ;
-
 % (b)
 % Sw^(-1) * SB
 [eigenvectors, eigenvalues] = eig(Sw^(-1) * SB);
 [eigenvalues_sorted, idx] = sort(diag(eigenvalues), 'descend');
 principal_eigenvectors = eigenvectors(:, idx(1:2)); % Top 2 eigenvectors
-
-disp("")
-disp('(b)')
-disp('Eigenvalues:');
-disp(eigenvalues_sorted(1:2));
-disp('Corresponding Eigenvectors:');
-disp(principal_eigenvectors);
 
 % (c)
 % ak = e'(xk - m)
@@ -93,8 +80,3 @@ scatter(a(1,:,3), a(2,:,3), 'b', 'filled');
 hold on ;
 title('Projected Data onto 2D Subspace');
 legend({'ω1', 'ω2', 'ω3'});
-
-% (d)
-disp("")
-disp('(d)')
-predict(a)

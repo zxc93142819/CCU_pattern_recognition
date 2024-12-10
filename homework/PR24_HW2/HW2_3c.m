@@ -30,21 +30,10 @@ for j = 1:30
     S = S + dif * dif' ;
 end
 
-disp('(a)')
-disp('Scatter Matrix:') ;
-disp(S) ;
-
 % (b)
 [eigenvectors, eigenvalues] = eig(S);
 [eigenvalues_sorted, idx] = sort(diag(eigenvalues), 'descend');
 principal_eigenvectors = eigenvectors(:, idx(1:2)); % Top 2 eigenvectors
-
-disp("")
-disp('(b)')
-disp('Eigenvalues:');
-disp(eigenvalues_sorted(1:2));
-disp('Corresponding Eigenvectors:');
-disp(principal_eigenvectors);
 
 % (c)
 % ak = e'(xk - m)
@@ -66,8 +55,3 @@ scatter(a(1,21:30), a(2,21:30), 'b', 'filled');
 hold on ;
 title('Projected Data onto 2D Subspace');
 legend({'ω1', 'ω2', 'ω3'});
-
-% (d)
-disp("")
-disp('(d)')
-predict(a)
